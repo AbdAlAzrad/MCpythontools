@@ -1,16 +1,15 @@
 from __future__ import print_function  # print() support for python 2.7
 from nbt140 import NBTFile
-from glob import glob
-import os
 import utilities
 
-def main(player_folder):
-    player_list = glob(os.path.join(player_folder, '*.dat'))
+def main(server_path):
+    player_list = utilities.get_player_files(server_path)
     number_of_workers = utilities.get_worker_count()
     print(number_of_workers)
+    print(player_list)
 
 
 __author__ = 'azrad'
 
 if __name__ == '__main__':
-    main('/home/azrad/mineproject/minecraft1-8/world/playerdata')
+    main("/home/azrad/mineproject/minecraft1-8")
