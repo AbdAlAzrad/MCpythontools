@@ -306,7 +306,8 @@ class TAG_String(TAG, Sequence):
         read = buffer.read(length.value)
         if len(read) != length.value:
             raise StructError()
-        self.value = read.decode("utf-8")
+        # self.value = read.decode("utf-8")  # change by azrad
+        self.value = str(read.decode("utf-8"))
 
     def _render_buffer(self, buffer):
         save_val = self.value.encode("utf-8")
@@ -595,6 +596,7 @@ class NBTFile(TAG_Compound):
                 type = TAG_Byte(buffer=self.file)
                 if type.value == self.id:
                     name = TAG_String(buffer=self.file).value
+
                     self._parse_buffer(self.file)
                     self.name = name
                     self.file.close()
