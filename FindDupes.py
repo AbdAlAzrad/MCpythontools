@@ -68,11 +68,3 @@ __author__ = 'azrad'
 
 if __name__ == '__main__':
     main("/home/azrad/mineproject/minecraft1-8")
-
-
-"""
-if int(platform.python_version().split('.')[0]) < 3:
-    print('using python 2.x')
-else:
-    print('using python 3.x')
-"""
