@@ -12,7 +12,7 @@ def get_worker_count():
 
 
 def get_player_files(path_to_server_root):
-
+    """returns list of all player files"""
     return glob(os.path.join(path_to_server_root, 'world', 'playerdata', '*.dat'))
 
 __author__ = 'azrad'
