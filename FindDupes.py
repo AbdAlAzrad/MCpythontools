@@ -29,7 +29,7 @@ def check_playerfile(task_queue, report_queue):
 
 
 def create_and_start_workers(job_queue, report_queue, number_of_workers):
-    """Creates a list of processes, and starts them"""
+    """Creates a list of processes, and starts them, returns list of worker processes"""
     # noinspection PyUnusedLocal
     list_of_workers = [multiprocessing.Process(target=check_playerfile, args=(job_queue, report_queue,))
                        for _i in range(number_of_workers)]
@@ -44,6 +44,20 @@ def load_job_queue(job_queue, list_of_workers, list_of_jobs):
     [job_queue.put(None) for _dummy in list_of_workers]
 
 
+def collect_reports(number_of_workers, report_queue):
+    """pulls reports off the report queue until it has grabbed 1 poison pill for each worker process
+    returns the reports"""
+    list_of_bad_players_inventories = []
+    poison_pills_found = 0
+    while poison_pills_found < number_of_workers:
+        report = report_queue.get()
+        if not report:
+            poison_pills_found += 1
+        else:
+            list_of_bad_players_inventories.append(report)
+    return list_of_bad_players_inventories
+
+
 def main(server_path):
     list_of_jobs = utilities.get_player_files(server_path)  # list of player files
     number_of_workers = utilities.get_worker_count()  # cal number of workers based on cores
@@ -53,18 +67,11 @@ def main(server_path):
     list_of_workers = create_and_start_workers(job_queue, report_queue, number_of_workers)  # start worker processes
     load_job_queue(job_queue, list_of_workers, list_of_jobs)
 
-    list_of_bad_players_inventories = []
-    poison_pills = 0
-    while poison_pills < number_of_workers:
-        report = report_queue.get()
-        if not report:
-            poison_pills += 1
-        else:
-            list_of_bad_players_inventories.append(report)
-
-    [print(report) for report in list_of_bad_players_inventories]
+    [print(report) for report in collect_reports(number_of_workers, report_queue)]  # print report of suspicious stuff
     [worker.join() for worker in list_of_workers]  # wait for all workers to end
-__author__ = 'azrad'
 
+
+__author__ = 'azrad'
+__version__ = '0.1'
 if __name__ == '__main__':
     main("/home/azrad/mineproject/minecraft1-8")
