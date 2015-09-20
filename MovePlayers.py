@@ -5,7 +5,6 @@ import argparse
 from nbt140 import NBTFile, MalformedFileError  # for newer version try: https://github.com/twoolie/NBT
 import utilities
 
-
 try:
     from Queue import Empty as EmptyQueue  # python 2.x
 except ImportError:
@@ -103,8 +102,9 @@ def calculate_number_of_workers():
 
 def create_and_start_workers(starting_arguments, input_job_queue, input_output_queue, input_num_of_workers):
     """Creates a list of processes, and starts them"""
-    output_list_of_workers = [multiprocessing.Process(target=move_player, args=(starting_arguments, input_job_queue,
-                            input_output_queue,)) for i in range(input_num_of_workers)]
+    output_list_of_workers = [multiprocessing.Process(target=move_player,
+                                                      args=(starting_arguments, input_job_queue,
+                                                            input_output_queue,)) for i in range(input_num_of_workers)]
     [worker.start() for worker in output_list_of_workers]
     return output_list_of_workers
 
