@@ -2,11 +2,30 @@ from __future__ import print_function  # make python 2.7 print like 3.4
 from nbt140 import NBTFile
 import utilities
 import multiprocessing
+import argparse
 
 try:
     from __builtin__ import xrange as range  # python 2.x, DANGER: the normal 2.7 range function is now not accessible
 except ImportError:
     pass  # python 3.4
+
+
+def create_parser():
+    """Returns parser object for handling command line arguments"""
+    my_parser = argparse.ArgumentParser(
+        description='Application to duplicated items in minecraft. Purpose of this script is to find items with a' +
+                    'quantity of less than 1. These are a precursor to most duplication methods. Written by' +
+                    'azrad from CraftyMynes, game-server: mc.craftymynes.com', add_help=False)
+
+    required_group = my_parser.add_argument_group(title='required')
+    required_group.add_argument('--path', action="store", type=str, dest="path",
+                                help='Path to the MCserver root (where the minecraft_server.jar file is located)',
+                                required=True)
+
+    optional_group = my_parser.add_argument_group(title='other, optional')
+    optional_group.add_argument('--version', action='version', version='%(prog)s ' + __version__)
+    optional_group.add_argument('--help', action='help', help='show this help message and exit')
+    return my_parser
 
 
 def check_playerfile(task_queue, report_queue):
@@ -58,8 +77,9 @@ def collect_reports(number_of_workers, report_queue):
     return list_of_bad_players_inventories
 
 
-def main(server_path):
-    list_of_jobs = utilities.get_player_files(server_path)  # list of player files
+def main():
+    starting_arguments = create_parser().parse_args()  # get the command line arguments used to start script
+    list_of_jobs = utilities.get_player_files(starting_arguments.path)  # list of player files
     number_of_workers = utilities.get_worker_count()  # cal number of workers based on cores
 
     job_queue = multiprocessing.Queue()  # queue to feed player files to workers
@@ -74,4 +94,4 @@ def main(server_path):
 __author__ = 'azrad'
 __version__ = '0.1'
 if __name__ == '__main__':
-    main("/home/azrad/mineproject/minecraft1-8")
+    main()
