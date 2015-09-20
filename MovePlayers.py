@@ -3,7 +3,7 @@ import multiprocessing
 import glob
 import argparse
 from nbt140 import NBTFile, MalformedFileError  # for newer version try: https://github.com/twoolie/NBT
-
+import utilities
 
 
 try:
@@ -25,7 +25,8 @@ def create_parser():
                     'azrad from CraftyMynes, game-server: mc.craftymynes.com', add_help=False)
 
     required_group = my_parser.add_argument_group(title='required')
-    required_group.add_argument('--path', action="store", type=str, dest="path", help='Path to the playerdata folder',
+    required_group.add_argument('--path', action="store", type=str, dest="path",
+                                help='Path to the MCserver root (where the minecraft_server.jar file is located)',
                                 required=True)
     required_group.add_argument('--destination', nargs='+', action="store", type=int, dest="destination",
                                 help='Coordinates to move players in the End too', required=True)
@@ -36,14 +37,6 @@ def create_parser():
     optional_group.add_argument('--version', action='version', version='%(prog)s ' + __version__)
     optional_group.add_argument('--help', action='help', help='show this help message and exit')
     return my_parser
-
-
-def get_list_player_files(starting_arguments):
-    """Returns a list of every player file in the directory"""
-    output_list = glob.glob(starting_arguments.path + '/*.dat')
-    if len(output_list) < 1:
-        raise IOError("NO PLAYERS FOUND!, double check --path " + starting_arguments.path + " is correct!")
-    return output_list
 
 
 def move_player(starting_arguments, task_queue, report_queue):
@@ -127,7 +120,7 @@ def main():
     """The main loop to set up everything"""
     starting_arguments = create_parser().parse_args()  # get the command line arguments used to start script
     sanity_check_coordinates(starting_arguments)  # make sure --destination isn't crazy
-    player_file_list = get_list_player_files(starting_arguments)  # get list of all player files
+    player_file_list = utilities.get_player_files(starting_arguments.path)  # list of player files
     job_queue = multiprocessing.Queue()  # queue to feed player files to workers
     output_queue = multiprocessing.Queue()  # queue for workers to return names of moved players
     number_of_workers = calculate_number_of_workers()  # calculate # of workers from cores
