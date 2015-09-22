@@ -8,5 +8,5 @@ Notes: These tools depends heavily on https://github.com/twoolie/NBT. The necess
 
 **YggdrasilUtilities.py** - Script to implement the methods documented here: http://wiki.vg/Authentication.
 
-**QueryServer.py** - Script to implement: http://wiki.vg/Server_List_Ping.
+**PingServer.py** - Script to implement: http://wiki.vg/Server_List_Ping.
 
