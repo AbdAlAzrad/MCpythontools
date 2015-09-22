@@ -55,3 +55,4 @@ def invalidate_access_token(access_token, client_token):
 
 __author__ = 'azrad'
 __version__ = '0.1'
+print login(username, password, client_token)
