@@ -55,7 +55,7 @@ def main(host, port, timeout):
 
 __author__ = 'azrad'
 if __name__ == '__main__':
-    host = 'vnlla.org'
+    host = 'mc.craftymynes.com'
     port = 25565
     timeout = 4
     main(host, port, timeout)
