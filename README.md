@@ -6,3 +6,7 @@ Notes: These tools depends heavily on https://github.com/twoolie/NBT. The necess
 
 **MovePlayers.py** - Searches every player file for players who are logged out in the End. It then moves them to a specified Overworld location. Runs in about the same time as FindDupes.py. Should not be run while the MC server is running. Purpose: migration to Minecraft 1.9.
 
+**YggdrasilUtilities.py** - Script to implement the methods documented here: http://wiki.vg/Authentication.
+
+**QueryServer.py** - Script to implement: http://wiki.vg/Server_List_Ping.
+
